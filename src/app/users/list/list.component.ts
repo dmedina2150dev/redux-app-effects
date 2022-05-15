@@ -14,6 +14,10 @@ export class ListComponent implements OnInit, OnDestroy {
 
 	users!: User[];
 	users$!: Subscription;
+	loading: boolean = false;
+	loadingSub$!: Subscription;
+	error: any;
+	
 
 
 	constructor(
@@ -23,6 +27,12 @@ export class ListComponent implements OnInit, OnDestroy {
 	ngOnInit(): void {
 		this.store.dispatch( loadUsers() );
 		// this.users$ = this.userService.getAll().subscribe( ( users: User[] ) => this.users = users );
+
+		this.users$ = this.store.select('users').subscribe( ({ users, loading, error }) => {
+			this.users = users;
+			this.loading = loading;
+			this.error = error;
+		} );
 	}
 
 	ngOnDestroy(): void {

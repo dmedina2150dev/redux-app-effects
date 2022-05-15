@@ -1,9 +1,10 @@
 import { createReducer, on } from '@ngrx/store';
-import { UsersModule } from 'src/app/users/users.module';
+import { User } from 'src/app/models/user.model';
+
 import { loadUsers, loadUsersError, loadUsersSuccess } from '../actions';
 
 export interface UsersState {
-    users: UsersModule[];
+    users: User[];
     loaded: boolean;
     loading: boolean;
     error: any;
@@ -23,13 +24,17 @@ export const usersReducer = createReducer(
         ...state, 
         loading: false,
         loaded: true,
-        users: [ ...users ] 
+        users:  [...users ]
     })),
     on( loadUsersError, (state, { payload }) => ({ 
         ...state, 
         loading: false,
         loaded: false,
-        error: payload
+        error: {
+            url: payload.url,
+            name: payload.name,
+            message: payload.message
+        }
     })),
 
 );
