@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { User } from 'src/app/models/user.model';
-import { UserService } from 'src/app/services/user.service';
+import { loadUsers } from 'src/app/store/actions';
+import { User } from '../../models/user.model';
+import { AppState } from '../../store/app.reducers';
 
 @Component({
 	selector: 'app-list',
@@ -14,10 +16,13 @@ export class ListComponent implements OnInit, OnDestroy {
 	users$!: Subscription;
 
 
-	constructor(private userService: UserService) { }
+	constructor(
+		private store: Store<AppState>
+	) { }
 
 	ngOnInit(): void {
-		this.users$ = this.userService.getAll().subscribe( ( users: User[] ) => this.users = users );
+		this.store.dispatch( loadUsers() );
+		// this.users$ = this.userService.getAll().subscribe( ( users: User[] ) => this.users = users );
 	}
 
 	ngOnDestroy(): void {
